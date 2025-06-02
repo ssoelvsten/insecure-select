@@ -5,5 +5,5 @@ build:
 
 run:
 	clear
-	rm -f /tmp/socket_demo
+	rm -f /tmp/socket_demo.*
 	./demo.out ${SECRET}

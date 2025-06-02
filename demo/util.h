@@ -29,12 +29,12 @@ int init_secret(int argc, char* argv[])
 ////////////////////////////////////////////////////////////////////////////////
 /// Port for public information
 ////////////////////////////////////////////////////////////////////////////////
-const int PORT_PUBLIC 2802;
+const int PORT_PUBLIC = 2802;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Port for secret information
 ////////////////////////////////////////////////////////////////////////////////
-const int PORT_SECRET 1505;
+const int PORT_SECRET = 1505;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Open a socket for `localhost:port` and wait for a connection is established
@@ -78,63 +78,44 @@ int listen_localhost(short port)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Path for unix file through which the sockets communicate
-////////////////////////////////////////////////////////////////////////////////
-const char* sun_path = "/tmp/socket_demo";
-
-////////////////////////////////////////////////////////////////////////////////
-/// File descriptor with the `source` end of the (technically bi-directional)
-/// stream.
-///
-/// \note These are put here to ease cross-thread communication.
-///////////////////////////////////////////////////////////////////////////////
-int source_fd = -1;
-
-////////////////////////////////////////////////////////////////////////////////
-/// File descriptor with the `target` end of the (technically bi-directional)
-/// stream.
-///
-/// \note These are put here to ease cross-thread communication.
-///////////////////////////////////////////////////////////////////////////////
-int target_fd = -1;
-
-////////////////////////////////////////////////////////////////////////////////
-/// Open a socket for `/tmp/socket_demo` and wait for a connection is
+/// Open a socket for `/tmp/socket_demo.<...>` and wait for a connection is
 /// established from a client. This can be used to obtain the input/output
 /// streams used to send public and secret information.
 ///
 /// \note This one is set up to be used with `<threads.h>` to not block the main
 ///       thread.
 ////////////////////////////////////////////////////////////////////////////////
-int init_target(void*)
+int listen_unix(const char* path)
 {
+  remove(path);
+
   const int fd = socket(AF_UNIX, SOCK_STREAM, 0);
   if (fd == -1) { return -1; }
 
   struct sockaddr_un addr;
   memset(&addr, 0, sizeof(struct sockaddr_un));
   addr.sun_family = AF_UNIX;
-  strncpy(addr.sun_path, sun_path, sizeof(addr.sun_path) - 1);
+  strncpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
 
   const int bind_errcode =
     bind(fd, (struct sockaddr *) &addr, sizeof(struct sockaddr_un));
   if (bind_errcode == -1) {
     close(fd);
-    remove(sun_path);
+    remove(path);
     return -1;
   }
 
   const int listen_errcode = listen(fd, 5);
   if (listen_errcode == -1) {
     close(fd);
-    remove(sun_path);
+    remove(path);
     return -1;
   }
 
-  target_fd = accept(fd, NULL, NULL);
+  int out = accept(fd, NULL, NULL);
   close(fd);
 
-  return 0;
+  return out;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,41 +127,96 @@ int init_target(void*)
 /// \note This one is set up to be used with `<threads.h>` to not block the main
 ///       thread.
 ////////////////////////////////////////////////////////////////////////////////
-int init_source()
+int connect_unix(const char* path)
 {
-  source_fd = socket(AF_UNIX, SOCK_STREAM, 0);
+  const int fd = socket(AF_UNIX, SOCK_STREAM, 0);
 
   struct sockaddr_un addr;
   memset(&addr, 0, sizeof(struct sockaddr_un));
   addr.sun_family = AF_UNIX;
-  strncpy(addr.sun_path, sun_path, sizeof(addr.sun_path) - 1);
+  strncpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
 
   const int connect_errcode =
-    connect(source_fd, (struct sockaddr *) &addr, sizeof(struct sockaddr_un));
+    connect(fd, (struct sockaddr *) &addr, sizeof(struct sockaddr_un));
   if (connect_errcode == -1) {
-    close(source_fd);
-    source_fd = -1;
+    close(fd);
     return -1;
   };
-  return 0;
+  return fd;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// Path for (public) Unix file through which the sockets communicate.
+////////////////////////////////////////////////////////////////////////////////
+const char* public_path = "/tmp/socket_demo.public";
+
+////////////////////////////////////////////////////////////////////////////////
+/// File descriptors for both ends of the public stream.
+///
+/// \note These are put here to ease cross-thread communication.
+///////////////////////////////////////////////////////////////////////////////
+int public_fd[2] = { -1, -1 };
+
+int listen_unix__public(void*)
+{
+  public_fd[0] = listen_unix(public_path);
+  return public_fd[0] < 0;
+}
+
+int connect_unix__public(void*)
+{
+  public_fd[1] = connect_unix(public_path);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// Path for (public) Unix file through which the sockets communicate.
+////////////////////////////////////////////////////////////////////////////////
+const char* secret_path = "/tmp/socket_demo.secret";
+
+////////////////////////////////////////////////////////////////////////////////
+/// File descriptors for both ends of the secret stream.
+///
+/// \note These are put here to ease cross-thread communication.
+///////////////////////////////////////////////////////////////////////////////
+int secret_fd[2] = { -1, -1 };
+
+int listen_unix__secret(void*)
+{
+  secret_fd[0] = listen_unix(secret_path);
+  return secret_fd[0] < 0;
+}
+
+int connect_unix__secret(void*)
+{
+  secret_fd[1] = connect_unix(secret_path);
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Repeat `recv` until encountering `\n`, the end of stream, or an error.
-///
-/// \todo output into an actual buffer?
+/// Repeat `recv` until encountering `\n`, the end of a string or the stream.
 ////////////////////////////////////////////////////////////////////////////////
-int recv_line(int fd)
+int read_str(int fd, char* buffer, int length)
 {
-  char buffer[1] = { 'a' };
-  int nread = -1;
-  int errcode = 0;
+  int acc_nread = 0;
 
-  do {
-    nread = recv(fd, buffer, 1, 0);
-    errcode = nread < 0;
-  } while (errcode == 0 && !(nread == 0 || buffer[0] == '\n'));
+  while (acc_nread+1 < length) {
+    char c    = 0;
+    int nread = read(fd, &c, 1);
 
-  return errcode;
+    // If at the end of the stream or file or a `\n`, then make it a `null`,
+    // i.e. an end of string
+    if (nread == 0 || c == '\n') {
+      nread = 1;
+      c = 0;
+    }
+
+    buffer[acc_nread] = c;
+    acc_nread += nread;
+
+    // Break if `c` is the end of the string
+    if (c == 0) { return acc_nread; }
+
+    // Break if an error occurred
+    if (nread < 0) { return -1; }
+  }
 }

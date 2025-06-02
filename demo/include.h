@@ -33,9 +33,6 @@
 #include <fcntl.h>
 /* The `open()` function on file descriptors. */
 
-#include <string.h>
-/* Strings */
-
 #include <stdio.h>
 /* Slightly easier than `write()` is to use `dprintf` which also works with a
  * file descriptor.
@@ -49,10 +46,6 @@
 
      remove(const char* file_path)
  */
-
-#include <errno.h>
-#include <stdlib.h>
-/* A few quality-of-life operations such as `exit()` and `strtol`. */
 
 #include<sys/socket.h>
 /* Unix sockets and their related functions. In particular, the server would
@@ -135,3 +128,15 @@
 
      https://man7.org/linux/man-pages/man2/select.2.html
 */
+
+#include <string.h>
+/* Strings */
+
+#include <errno.h>
+#include <stdlib.h>
+/* A few quality-of-life operations such as `exit()` and `strtol`. */
+
+#include <threads.h>
+/* C11 threads interface. Most importantly are the `thrd_create` and
+ * `thrd_join` functions.
+ */

@@ -1,15 +1,13 @@
 #include "../include.h"
 #include "../util.h"
 
-#include <threads.h>
-
 const int char_max = 256;
 
 int fill_secret(void*)
 {
   for (int i = 0; i <= secret; ++i) {
     const unsigned char i_char = 0;
-    send(source_fd, &i_char, 1, 0);
+    send(public_fd[1], &i_char, 1, 0);
   }
   return 0;
 }
@@ -18,7 +16,7 @@ int fill_public(void*)
 {
   for (int i = char_max-1; 0 <= i; --i) {
     const unsigned char i_char = i;
-    send(source_fd, &i_char, 1, 0);
+    send(public_fd[1], &i_char, 1, 0);
   }
   return 0;
 }
@@ -27,7 +25,7 @@ int drop_public(void*)
 {
   for (int i = 0; i < char_max; ++i) {
     unsigned char _;
-    recv(target_fd, &_, 1, 0);
+    recv(public_fd[0], &_, 1, 0);
   }
   return 0;
 }
@@ -43,12 +41,12 @@ int main(int argc, char* argv[])
   if (secret_errcode) { return -1; }
 
   // Set up socket(s
-  long unsigned int init_target_id;
-  thrd_create(&init_target_id, init_target, NULL);
+  long unsigned int listen_public_id;
+  thrd_create(&listen_public_id, listen_unix__public, NULL);
   sleep(1);
-  init_source();
-  thrd_join(init_target_id, NULL);
-  if (source_fd == -1 || target_fd == -1) { return -1; }
+  connect_unix__public(NULL);
+  thrd_join(listen_public_id, NULL);
+  if (public_fd[0] == -1 || public_fd[1] == -1) { return -1; }
 
   // Fill message queue with secret messages
   long unsigned int fill_secret_id;
@@ -70,13 +68,8 @@ int main(int argc, char* argv[])
   thrd_join(fill_public_id, NULL);
 
   unsigned char leak;
-  recv(target_fd, &leak, 1, 0);
+  recv(public_fd[0], &leak, 1, 0);
   dprintf(STDOUT_FILENO, "leak = %i\n", leak);
-
-  // Final clean up
-  close(source_fd);
-  close(target_fd);
-  remove(sun_path);
 
   return 0;
 }
