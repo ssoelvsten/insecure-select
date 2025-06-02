@@ -1,6 +1,7 @@
 // --------------------------------------------------------------------------//
 // Import relevant system calls
 #include "../include.h"
+#include "../util.h"
 
 int recv_line(int fd)
 {
