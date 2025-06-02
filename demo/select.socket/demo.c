@@ -1,26 +1,12 @@
-// --------------------------------------------------------------------------//
-// Import relevant system calls
 #include "../include.h"
 #include "../util.h"
 
-int recv_line(int fd)
+////////////////////////////////////////////////////////////////////////////////
+/// Function which leaks information about the state of the secret socket to the
+/// state of the public one.
+////////////////////////////////////////////////////////////////////////////////
+int leak(const int p_fd)
 {
-  char buffer[1] = { 'a' };
-  int nread = -1;
-  int errcode = 0;
-
-  do {
-    nread = recv(fd, buffer, 1, 0);
-    errcode = nread < 0;
-  } while (errcode == 0 && !(nread == 0 || buffer[0] == '\n'));
-
-  return errcode;
-}
-
-// ----------------------------------------------------------------------------
-// Function which leaks information about the state of the secret socket to the
-// state of the public one.
-int leak(const int p_fd) {
   // Open secret socket
   const int s_fd = listen_localhost(PORT_SECRET);
   if (s_fd < 0) { return s_fd; }
@@ -58,10 +44,12 @@ int leak(const int p_fd) {
   return errcode;
 }
 
-// ----------------------------------------------------------------------------
-// Main program that only touches the public socket and leaks information as it
-// sends the received message back again.
-int main() {
+////////////////////////////////////////////////////////////////////////////////
+/// Main program that only touches the public socket and leaks information as it
+/// sends the received message back again.
+////////////////////////////////////////////////////////////////////////////////
+int main()
+{
   // Open public socket
   const int p_fd = listen_localhost(PORT_PUBLIC);
   if (p_fd < 0) { return p_fd; }

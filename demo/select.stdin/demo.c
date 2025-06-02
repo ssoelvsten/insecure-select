@@ -1,11 +1,11 @@
-// --------------------------------------------------------------------------//
-// Import relevant system calls
 #include "../include.h"
 
-// ----------------------------------------------------------------------------
-// Function which leaks information about the state of `stdin` into the state
-// of the public file, `public.txt`, with the given file descriptor `p_fd`.
-int leak(const int p_fd) {
+////////////////////////////////////////////////////////////////////////////////
+/// Function which leaks information about the state of `stdin` into the state
+/// of the public file, `public.txt`, with the given file descriptor `p_fd`.
+////////////////////////////////////////////////////////////////////////////////
+int leak(const int p_fd)
+{
   // Open secret file (stdin)
   const int s_fd = STDIN_FILENO;
 
@@ -35,11 +35,13 @@ int leak(const int p_fd) {
   }
 }
 
-// ----------------------------------------------------------------------------
-// Main program that only touches the public file, `public.txt`, but is able to
-// deduce whether `stdin` has content or not based on what are the next tokens
-// in the public file.
-int main() {
+////////////////////////////////////////////////////////////////////////////////
+/// Main program that only touches the public file, `public.txt`, but is able to
+/// deduce whether `stdin` has content or not based on what are the next tokens
+/// in the public file.
+////////////////////////////////////////////////////////////////////////////////
+int main()
+{
   // Open public file
   const int p_fd = open("./public.txt", O_RDONLY);
   if (p_fd == -1) { return -1; };
