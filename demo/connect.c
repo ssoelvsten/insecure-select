@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
   // eternal loop:
   // >> : <to be sent msg>
   // << : <returned msg>
-  while (1) {
+  for (;;) {
     dprintf(STDOUT_FILENO, ">> : ");
 
     // Create `nfds` (where `fd` is guaranteed to be the largest descriptor)

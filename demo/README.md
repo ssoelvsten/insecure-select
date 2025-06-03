@@ -1,7 +1,7 @@
 # Demonstrations
 
-Each subfolder includes demonstrations of varying complexities for how to leak
-information through `send`/`recv` and `select`.
+The following subfolders includes demonstrations of varying complexities for
+how to leak information through `send`/`recv` and `select`.
 
 - `empty.<variant>`: Leak whether a secret channel has content or not. This
   provides a 1-bit side channel.
@@ -19,3 +19,9 @@ information through `send`/`recv` and `select`.
   - `<2>`: The secret number is once more sent as a certain number of messages,
     but this time on a separate *secret* socket. Yet, since it is given
     priority when reading, it leaks anew.
+
+Based on these minimal examples, we have implemented an `echo` server which
+leaks information about one user's inputs to another.
+
+- `echo.safe`: Is a secure reference implementation that does not leak any
+  information across channels due to a misuse of `select`.
