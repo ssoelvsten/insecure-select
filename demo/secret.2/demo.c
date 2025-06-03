@@ -1,6 +1,7 @@
 #include "../include.h"
 #include "../util.h"
 
+////////////////////////////////////////////////////////////////////////////////
 const int char_max = 256;
 
 int fill_secret(void*)
