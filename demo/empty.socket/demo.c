@@ -1,5 +1,5 @@
 #include "../include.h"
-#include "../util.h"
+#include "../util_unix.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Function which leaks information about the state of the secret socket to the
