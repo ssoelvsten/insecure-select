@@ -110,8 +110,9 @@ int main(int argc, char* argv[])
         dprintf(STDOUT_FILENO, "  Closing   [%i] = (fd: %i)\n", i, fd);
         // Move the last active connection to 'i' to pack everything together
         nopen -= 1;
-        open_fd[i] = open_fd[nopen];
+        if (nopen == 0) { continue; }
 
+        open_fd[i] = open_fd[nopen];
         dprintf(STDOUT_FILENO, "  Moving    [%i] = [%i] = (fd: %i)\n", i, nopen, open_fd[i]);
         // Make sure that the swapped connection also is touched.
         i -= 1;
