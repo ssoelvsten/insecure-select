@@ -1,5 +1,5 @@
-#include "include.h"
-#include "util.h"
+#include "../include.h"
+#include "../util.h"
 
 #include <string.h>
 
