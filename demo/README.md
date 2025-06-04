@@ -26,6 +26,11 @@ leaks information about one user's inputs to another.
 - `echo.safe`: Is a secure reference implementation that does not leak any
   information across channels due to a misuse of `select`.
 
+- `echo.first-served`: An echo server, that in each round (2s) only replies to
+  the first connection with content. Effectively, a *starvation* of a later
+  connection provides a side-channel. This lifts the `empty.socket` demo into
+  an echo server.
+
 - `echo.throttle`: An echo server, that in each (1s) round only responds with
   16 bytes greedily favouring the earliest connected clients. This lifts the
   `secret.2` example into an echo server.

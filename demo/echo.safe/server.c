@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
   if (listener_fd < 0) { return listener_fd; }
   dprintf(STDOUT_FILENO, "Listening on: %s:%i\n\n", ADDR, PORT);
 
-  // Keep track of all accepting (and still alive) connections.
+  // Keep track of all accepted (and still alive) connections.
   int nopen = 0;
   int open_fd[CONN];
 
