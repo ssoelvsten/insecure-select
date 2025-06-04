@@ -25,3 +25,7 @@ leaks information about one user's inputs to another.
 
 - `echo.safe`: Is a secure reference implementation that does not leak any
   information across channels due to a misuse of `select`.
+
+- `echo.throttle`: An echo server, that in each (1s) round only responds with
+  16 bytes greedily favouring the earliest connected clients. This lifts the
+  `secret.2` example into an echo server.

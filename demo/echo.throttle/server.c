@@ -2,6 +2,11 @@
 #include "../util_echo.h"
 
 ////////////////////////////////////////////////////////////////////////////////
+/// Maximum number bytes to be sent back each round.
+////////////////////////////////////////////////////////////////////////////////
+const int MAX_BYTES = 16;
+
+////////////////////////////////////////////////////////////////////////////////
 /// Main program that only touches the public socket and leaks information as
 /// it sends the received message back again.
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +37,9 @@ int main(int argc, char* argv[])
     }
     nfds += 1;
 
+    // Throttle the server such that attacks are easier
+    sleep(1);
+
     // Wait for something to do
     const int nready = select(nfds, &readfds, NULL, NULL, NULL);
 
@@ -41,12 +49,17 @@ int main(int argc, char* argv[])
     }
 
     // New data from current connections?
+    int bytes_left = MAX_BYTES;
+
     for (int i = 0; i < nopen; ++i) {
+      if (!bytes_left) { break; }
+
       const int fd = open_fd[i];
       if (!FD_ISSET(fd, &readfds)) { continue; }
 
       char buffer[BUFF];
-      const int nread = read(fd, &buffer, BUFF);
+      const int nread = read(fd, &buffer, bytes_left);
+      bytes_left -= nread;
 
       if (nread < 0) { // Error?
       } else if (nread == 0) { // Connection closed...
