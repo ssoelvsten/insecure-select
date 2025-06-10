@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
       const int nread = read(fd, &buffer, BUFF);
 
       if (nread < 0) { // Error?
+        dprintf(STDERR_FILENO, "  recv < 0 for '%i'\n", i, fd);
       } else if (nread == 0) { // Connection closed...
         dprintf(STDOUT_FILENO, "  Closing   [%i] = (fd: %i)\n", i, fd);
         // Move the last active connection to 'i' to pack everything together
@@ -65,9 +66,9 @@ int main(int argc, char* argv[])
       } else { // Data! Send it back!
         const int nwrite = send(fd, buffer, nread, 0);
         if (nwrite < 0) {
-          dprintf(STDERR_FILENO, "nwrite < 0 for '%i'\n", fd);
+          dprintf(STDERR_FILENO, "  nwrite < 0 for '%i'\n", fd);
         } else if (nwrite != nread) {
-          dprintf(STDERR_FILENO, "nwrite != nread for '%i'\n", fd);
+          dprintf(STDERR_FILENO, "  nwrite != nread for '%i'\n", fd);
         }
       }
     }
