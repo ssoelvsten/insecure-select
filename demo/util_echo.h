@@ -51,3 +51,33 @@ int make_listener()
 
   return listener_fd;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/// Connect to `localhost:port`.
+///
+/// \note Based on Beej's beginner's guide for socket programming:
+///       https://beej.us/guide/bgnet/html/split-wide/index.html
+////////////////////////////////////////////////////////////////////////////////
+int make_connection()
+{
+  // Create socket for an internet stream.
+  const int fd = socket(PF_INET, SOCK_STREAM, 0);
+  if (fd < 0) { return fd; }
+
+  // Connect to address.
+  struct sockaddr_in addr;
+  addr.sin_family = AF_INET;
+  addr.sin_port   = htons(PORT);
+  inet_pton(AF_INET, ADDR, &(addr.sin_addr));
+  memset(addr.sin_zero, '\0', sizeof addr.sin_zero);
+
+  const socklen_t addrlen = sizeof addr;
+
+  const int connect_code = connect(fd, (struct sockaddr *) &addr, addrlen);
+  if (connect_code < 0) {
+    close(fd);
+    return connect_code;
+  }
+
+  return fd;
+}

@@ -1,24 +1,30 @@
 #include "../include.h"
 #include "../util.h"
-#include "../util_unix.h"
+#include "../util_echo.h"
 
 #include <string.h>
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Main program that connects to the given socket
+/// Send each byte one by one each 0.2s.
+////////////////////////////////////////////////////////////////////////////////
+int slow_send(int fd, char* buf, size_t size, int flags)
+{
+  dprintf(STDOUT_FILENO, "   : ");
+  for (int i = 0; i < size; ++i) {
+    send(fd, buf + i, 1, 0);
+    dprintf(STDOUT_FILENO, ".");
+    usleep(200'000);
+  }
+  dprintf(STDOUT_FILENO, "\n");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/// Main program that connects to the given socket and forwards STDIN.
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
-  // Read 'secret' or 'public' from command line arguments
-  if (argc != 2) {
-    dprintf(STDERR_FILENO, "Please provide either 'public' or 'secret'\n");
-    return -1;
-  }
-
-  const char* path = !strcmp(argv[1], "secret") ? secret_path : public_path;
-
   // Set up socket
-  int fd = connect_unix(path);
+  int fd = make_connection();
   if (fd < 0) { return fd; }
 
   dprintf(STDOUT_FILENO, "Connections established...\n");
@@ -56,7 +62,7 @@ int main(int argc, char* argv[])
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
       char buffer[128];
       const int buffer_end = read_str(STDIN_FILENO, buffer, 128);
-      send(fd, buffer, buffer_end, 0);
+      slow_send(fd, buffer, buffer_end, 0);
     }
 
     // Handle returned messages to be displayed to the user

@@ -24,7 +24,8 @@ Based on these minimal examples, we have implemented an `echo` server which
 leaks information about one user's inputs to another.
 
 - `echo.safe`: Is a secure reference implementation that does not leak any
-  information across channels due to a misuse of `select`.
+  information across channels due to a misuse of `select`, the sockets, or
+  anything else.
 
 - `echo.first-served`: An echo server, that in each round (2s) only replies to
   the first connection with content. Effectively, a *starvation* of a later
@@ -34,3 +35,7 @@ leaks information about one user's inputs to another.
 - `echo.throttle`: An echo server, that in each (1s) round only responds with
   16 bytes greedily favouring the earliest connected clients. This lifts the
   `secret.2` example into an echo server.
+
+- `echo.buffer`: A set of echo servers that buffer the users messages and only
+  responds when reading a `\n` or `\0`.
+  - `server.safe`: A safe buffered reference implementation.
