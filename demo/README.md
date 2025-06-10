@@ -41,3 +41,6 @@ leaks information about one user's inputs to another.
   - `server.safe`: A safe buffered reference implementation.
   - `server.bad_close`: The buffer is not properly reset when disconnecting
     with half a message left in the buffer.
+  - `server.same_buffer`: The same buffer is used for all connections, meaning
+    one can read buffered partial messages from others. This is inspired by
+    Apache's bug [52701](https://bz.apache.org/bugzilla/show_bug.cgi?id=42701).
