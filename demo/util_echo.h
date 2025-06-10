@@ -33,7 +33,6 @@ int make_listener()
   // Ensure the address and port is not locked by a previous incarnation of
   // this server.
 
-  dprintf(STDOUT_FILENO, "bind(...)\n");
   // Bind to address
   struct sockaddr_in addr;
   addr.sin_family = AF_INET;
@@ -46,7 +45,6 @@ int make_listener()
   const int bind_code = bind(listener_fd, (struct sockaddr *) &addr, addrlen);
   if (bind_code < 0) { return bind_code; }
 
-  dprintf(STDOUT_FILENO, "listen(...)\n");
   // Listen for new connections
   const int listen_code = listen(listener_fd, 2*CONN);
   if (listen_code < 0) { return listen_code; }
