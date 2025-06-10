@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
       bytes_left -= nread;
 
       if (nread < 0) { // Error?
-        dprintf(STDERR_FILENO, "  recv < 0 for '%i'\n", i, fd);
+        dprintf(STDERR_FILENO, "  nread < 0 for '%i'\n", i, fd);
       } else if (nread == 0) { // Connection closed...
         dprintf(STDOUT_FILENO, "  Closing   [%i] = (fd: %i)\n", i, fd);
         // Move the last active connection to 'i' to pack everything together
