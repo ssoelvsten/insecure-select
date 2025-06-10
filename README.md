@@ -43,3 +43,18 @@ interesting issues:
   are not reset after closing.
 - [55615](https://bz.apache.org/bugzilla/show_bug.cgi?id=55615): thread
   starvation when number of clients exceeds a certain threshold.
+
+## Usage (on GitHub)
+
+But, how much is `select` and its siblings used (on GitHub)?
+
+- [Sourcegraph search for
+  `select`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*select%5C%28.*%2C.*%2C.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
+  More than a thousand usages; some of which are not related to the Unix
+  `select`.
+- [Sourcegraph search for
+  `poll`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*poll%5C%28.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
+  Also more than a thousand hits! Some of these, of course, are not related to
+  the Unix `poll`.
+- [Sourcegraph search for `epoll_wait`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*epoll_wait%5C%28.*%2C.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
+  Again, more than a thousand hits!
