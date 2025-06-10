@@ -39,3 +39,5 @@ leaks information about one user's inputs to another.
 - `echo.buffer`: A set of echo servers that buffer the users messages and only
   responds when reading a `\n` or `\0`.
   - `server.safe`: A safe buffered reference implementation.
+  - `server.bad_close`: The buffer is not properly reset when disconnecting
+    with half a message left in the buffer.

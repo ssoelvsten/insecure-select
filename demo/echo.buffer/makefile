@@ -5,6 +5,7 @@ build/client:
 
 build/server:
 	gcc server.safe.c -o server.safe.out
+	gcc server.bad_close.c -o server.bad_close.out
 
 run/client:
 	clear
@@ -15,3 +16,7 @@ run/server: run/server/safe
 run/server/safe:
 	clear
 	./server.safe.out
+
+run/server/bad_close:
+	clear
+	./server.bad_close.out
