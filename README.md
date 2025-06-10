@@ -31,6 +31,14 @@ web server are vaguely related to this issue:
 The [bug database](https://bz.apache.org/bugzilla/) also has the following
 interesting issues:
 
+- [40660](https://bz.apache.org/bugzilla/show_bug.cgi?id=40660): Small typo
+  error changes precedence of operators which affected the wrapper for the
+  *epoll* system call.
+- [52701](https://bz.apache.org/bugzilla/show_bug.cgi?id=42701): Incorrect
+  completion of partial requests due to mixing up the sockets, leads to garbled
+  requests that may result in crashes or incorrect (secret?) data returned.
+- [59897](https://bz.apache.org/bugzilla/show_bug.cgi?id=59897): Using `select`
+  with more than `FD_SETSIZE` (usually 1024) sockets leads to a crash.
 - [64809](https://bz.apache.org/bugzilla/show_bug.cgi?id=64809): connections
   are not reset after closing.
 - [55615](https://bz.apache.org/bugzilla/show_bug.cgi?id=55615): thread
