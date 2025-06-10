@@ -62,9 +62,15 @@ int main(int argc, char* argv[])
     if (FD_ISSET(fd, &readfds)) {
       char buffer[128];
       const int buffer_end = read(fd, buffer, 128);
-      if (buffer_end <= 0) { return 0; };
 
-      dprintf(STDOUT_FILENO, "\r<< : %s\n", buffer);
+      if (buffer_end > 0) {
+        // Overwrite '>> : ' by '\r' and then write the received message
+        dprintf(STDOUT_FILENO, "\r<< : %s\n", buffer);
+      } else {
+        // Terminate program if connection closes (or errors)
+        dprintf(STDOUT_FILENO, "\n");
+        return 0;
+      }
     }
   }
 }
