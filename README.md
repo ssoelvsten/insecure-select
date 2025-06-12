@@ -13,9 +13,11 @@ examples.
 These *C* programs provide examples of varying complexity on how to leak
 information from a confidential stream.
 
-## Related Issues
+## Related Material
 
-### Apache
+### Issues
+
+#### Apache
 
 The following [security
 vulnerabilities](https://httpd.apache.org/security_report.html) in the Apache
@@ -44,9 +46,26 @@ interesting issues:
 - [55615](https://bz.apache.org/bugzilla/show_bug.cgi?id=55615): thread
   starvation when number of clients exceeds a certain threshold.
 
-## Usage (on GitHub)
+### Papers
 
-But, how much is `select` and its siblings used (on GitHub)?
+- Systems like [Flume](https://dl.acm.org/doi/abs/10.1145/1323293.1294293),
+  [HiStar](https://dl.acm.org/doi/abs/10.1145/2018396.2018419), and
+  [Asbestos](https://dl.acm.org/doi/abs/10.1145/1095809.1095813) provide
+  information-flow control at a too coarse-grained level. They consider each
+  program a black-box with certain privileges; whether the program can read
+  from and write to a socket depends on the labels of the socket's other
+  endpoint and of the program.
+
+  On the other hand, the leaks in `demo/` are due to sharing of memory and/or
+  control flow influencing what is sent. With these systems, either the safe
+  `echo` example would be invalid (it is tainted by all connections and cannot
+  respond) or the unsafe ones would be permitted (they can declassify/endorse
+  information regardless of the bugs).
+
+## Usage
+
+But, how much is `select` and its siblings used? Here is a quick preliminary
+search on GitHub.
 
 - [Sourcegraph search for
   `select`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*select%5C%28.*%2C.*%2C.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
