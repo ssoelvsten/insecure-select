@@ -64,9 +64,7 @@ int main(int argc, char* argv[])
 
         open_fd[i]   = open_fd[nopen];
         recv_size[i] = recv_size[nopen];
-        for (int j = 0; j < recv_size[i]; ++j) {
-          recv_buff[i][j] = recv_buff[nopen][j];
-        }
+        memcpy(recv_buff[i], recv_buff[nopen], recv_size[nopen]);
 
         dprintf(STDOUT_FILENO, "  Moving     [%i] = [%i] = (fd: %i)\n", i, nopen, open_fd[i]);
         // Make sure that the swapped connection also is touched.

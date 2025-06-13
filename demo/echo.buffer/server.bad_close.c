@@ -62,7 +62,9 @@ int main(int argc, char* argv[])
         nopen -= 1;
         if (nopen == 0) { continue; }
 
-        open_fd[i]   = open_fd[nopen];
+        open_fd[i] = open_fd[nopen];
+        // NOTE: Forgot to update the buffer!
+
         dprintf(STDOUT_FILENO, "  Moving     [%i] = [%i] = (fd: %i)\n", i, nopen, open_fd[i]);
         // Make sure that the swapped connection also is touched.
         i -= 1;
