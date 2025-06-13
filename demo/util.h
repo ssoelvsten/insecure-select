@@ -13,7 +13,7 @@ int read_str(int fd, char* buffer, int length)
     // i.e. an end of string
     if (nread == 0 || c == '\n') {
       nread = 1;
-      c = 0;
+      c = '\0';
     }
 
     buffer[acc_nread] = c;

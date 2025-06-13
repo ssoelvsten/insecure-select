@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
             const int recv_buff_idx = recv_size[i] + buffer_idx;
             recv_buff[i][recv_buff_idx] = buffer[buffer_idx];
 
-            if (buffer[buffer_idx] == '\n' || buffer[buffer_idx] == 0) {
+            if (buffer[buffer_idx] == '\n' || buffer[buffer_idx] == '\0') {
               eom_idx = recv_buff_idx;
               break;
             }
