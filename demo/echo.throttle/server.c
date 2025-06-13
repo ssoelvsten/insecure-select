@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
         dprintf(STDOUT_FILENO, "  Closing   [%i] = (fd: %i)\n", i, fd);
         // Move the last active connection to 'i' to pack everything together
         nopen -= 1;
-        if (nopen == 0) { continue; }
+        if (nopen == 0 || i == nopen) { continue; }
 
         open_fd[i] = open_fd[nopen];
         dprintf(STDOUT_FILENO, "  Moving    [%i] = [%i] = (fd: %i)\n", i, nopen, open_fd[i]);

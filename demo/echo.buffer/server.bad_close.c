@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
         dprintf(STDOUT_FILENO, "  Closing    [%i] = (fd: %i)\n", i, fd);
         // Move the last active connection to 'i' to pack everything together
         nopen -= 1;
-        if (nopen == 0) { continue; }
+        if (nopen == 0 || i == nopen) { continue; }
 
         open_fd[i] = open_fd[nopen];
         // NOTE: Forgot to update the buffer!
