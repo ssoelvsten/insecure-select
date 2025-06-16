@@ -2,8 +2,8 @@
 #include "../util_echo.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Main program that only touches the public socket and leaks information as
-/// it sends the received message back again.
+/// Echo server that leaks information by only serving one at a time while also
+/// sending an incrementing counter (clock value) back again.
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {

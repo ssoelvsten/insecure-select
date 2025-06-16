@@ -2,8 +2,8 @@
 #include "../util_echo.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Main program that only touches the public socket and leaks information as
-/// it sends the received message back again.
+/// Echo server that each round (1) drops data from the first available
+/// connection and then (2) responds to everyone with all their remaining data.
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {

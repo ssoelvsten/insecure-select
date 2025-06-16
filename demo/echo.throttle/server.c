@@ -7,8 +7,9 @@
 const int MAX_BYTES = 16;
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Main program that only touches the public socket and leaks information as
-/// it sends the received message back again.
+/// Echo server that only sends `MAX_BYTES` back each round. This makes it
+/// possible to read the number of characters sent by some of the other
+/// connections.
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {

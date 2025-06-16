@@ -2,8 +2,9 @@
 #include "../util_echo.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Main program that only touches the public socket and leaks information as
-/// it sends the received message back again.
+/// Echo server that each round only serves the first connection that has some
+/// data. This can create a starvation of later connections thereby creating a
+/// timing side channel.
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {

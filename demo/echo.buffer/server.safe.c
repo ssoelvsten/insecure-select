@@ -2,8 +2,7 @@
 #include "../util_echo.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-/// Main program that only touches the public socket and leaks information as
-/// it sends the received message back again.
+/// A (safe) echo server that buffers the ingoing requests until '\n' or '\0'.
 ////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char* argv[])
 {
