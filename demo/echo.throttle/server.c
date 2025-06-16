@@ -24,6 +24,9 @@ int main(int argc, char* argv[])
 
   // Loop: wait for new connections and send received data back again.
   for (;;) {
+    // Throttle the server such that attacks are easier
+    sleep(2);
+
     // Create `nfds` and `readfds` = { listener_fd, open_fd[..] }
     int nfds = listener_fd;
 
@@ -37,9 +40,6 @@ int main(int argc, char* argv[])
       FD_SET(fd, &readfds);
     }
     nfds += 1;
-
-    // Throttle the server such that attacks are easier
-    sleep(1);
 
     // Wait for something to do
     const int nready = select(nfds, &readfds, NULL, NULL, NULL);
