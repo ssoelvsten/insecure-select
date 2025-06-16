@@ -27,14 +27,27 @@ leaks information about one user's inputs to another.
   information across channels due to a misuse of `select`, the sockets, or
   anything else.
 
-- `echo.first-served`: An echo server, that in each round (2s) only replies to
-  the first connection with content. Effectively, a *starvation* of a later
-  connection provides a side-channel. This lifts the `empty.socket` demo into
-  an echo server.
+- The following two examples provide a timing channel by full or partial
+  starvation of one connection due to another.
 
-- `echo.throttle`: An echo server, that in each (1s) round only responds with
-  16 bytes greedily favouring the earliest connected clients. This lifts the
-  `secret.2` example into an echo server.
+  - `echo.first-served`: An echo server, that in each round (2s) only replies
+    to the first connection with content. Effectively, a *starvation* of a
+    later connection provides a side-channel. This lifts the `empty.socket`
+    demo into an echo server.
+
+  - `echo.throttle`: An echo server, that in each (1s) round only responds with
+    16 bytes greedily favouring the earliest connected clients. This lifts the
+    `secret.2` example into an echo server.
+
+- `echo.drop`: These two servers lift the `empty.socket` example without making
+  it a timing side channel. The two servers differ in the number of `select`
+  statements each round.
+  - `<1>`: Only the first is served each round (still potentially starving
+    other connections). Yet, each connection not only gets its own message back
+    but also the value of an incrementing counter, i.e. an abstract clock.
+  - `<2>`: Every second use of `select` only drops messages from the first
+    connection rather than sending it back; each connection can see in their
+    response whether they (or a prior connection) had their data dropped.
 
 - `echo.buffer`: A set of echo servers that buffer the users messages and only
   responds when reading a `\n` or `\0`.
