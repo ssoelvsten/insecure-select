@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
       } else if (nread == 0) {
         // Connection closed...
         close_accepted(open_fd, &nopen, &i);
-      } else if (i % 2) {
+      } else {
         // Data! Send back message '<sc_prefix>        <message>'
         const int sc_prefix = 15;
         char send_buffer[sc_prefix + BUFF];
