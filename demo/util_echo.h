@@ -53,6 +53,35 @@ int make_listener()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+/// Close an accepted connection in a list of file descriptors.
+///
+/// \note This moves the last connection (identified with `nfds`) to `i`. If
+///       so, the value of `i` is decremented by one; this ensures that the
+///       case of `i` being a loop variable, the moved connection is also
+///       touched.
+///
+/// \note Based on Beej's beginner's guide for socket programming:
+///       https://beej.us/guide/bgnet/html/split-wide/index.html
+////////////////////////////////////////////////////////////////////////////////
+void close_accepted(int* fds, int* nfds, int* i)
+{
+  // Close the connection to free the file descriptor for new connections
+  const int fd = fds[*i];
+  dprintf(STDOUT_FILENO, "  Closing   [%i] = (fd: %i)\n", *i, fd);
+  close(fd);
+
+  // Move the last active connection to 'i' to pack everything together
+  *nfds = *nfds - 1;
+  if (*nfds == 0 || *i == *nfds) { return; }
+
+  fds[*i] = fds[*nfds];
+  dprintf(STDOUT_FILENO, "  Moving    [%i] = [%i] = (fd: %i)\n", *i, *nfds, fds[*i]);
+
+  // Decrement `i` to make loop
+  *i = *i - 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 /// Connect to `localhost:port`.
 ///
 /// \note Based on Beej's beginner's guide for socket programming:

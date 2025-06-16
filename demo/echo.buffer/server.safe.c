@@ -57,7 +57,10 @@ int main(int argc, char* argv[])
       if (nread < 0) { // Error?
         dprintf(STDERR_FILENO, "  nread < 0 for '%i'\n", i, fd);
       } else if (nread == 0) { // Connection closed...
+        // Close the connection to free the file descriptor for new connections
         dprintf(STDOUT_FILENO, "  Closing    [%i] = (fd: %i)\n", i, fd);
+        close(fd);
+
         // Move the last active connection to 'i' to pack everything together
         nopen -= 1;
         if (nopen == 0 || i == nopen) { continue; }
@@ -69,9 +72,6 @@ int main(int argc, char* argv[])
         dprintf(STDOUT_FILENO, "  Moving     [%i] = [%i] = (fd: %i)\n", i, nopen, open_fd[i]);
         // Make sure that the swapped connection also is touched.
         i -= 1;
-
-        // Close the connection to free the file descriptor for new connections
-        close(fd);
       } else { // Data!
         int buffer_idx = 0;
         while (buffer_idx < nread) {
