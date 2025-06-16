@@ -60,15 +60,19 @@ int main(int argc, char* argv[])
 
     // Send user input to listener (blocks until `\n`)
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
-      char buffer[128];
-      const int buffer_end = read_str(STDIN_FILENO, buffer, 128);
+      char buffer[BUFF];
+      for (int i = 0; i < BUFF; ++i) { buffer[i] = '\0'; }
+
+      const int buffer_end = read_str(STDIN_FILENO, buffer, BUFF);
       slow_send(fd, buffer, buffer_end, 0);
     }
 
     // Handle returned messages to be displayed to the user
     if (FD_ISSET(fd, &readfds)) {
-      char buffer[128];
-      const int buffer_end = read(fd, buffer, 128);
+      char buffer[BUFF];
+      for (int i = 0; i < BUFF; ++i) { buffer[i] = '\0'; }
+
+      const int buffer_end = read(fd, buffer, BUFF);
 
       if (buffer_end > 0) {
         // Overwrite '>> : ' by '\r' and then write the received message
