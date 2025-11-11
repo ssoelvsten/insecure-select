@@ -18,7 +18,7 @@ These demos can be divided into two types
 2. Mismanagement of buffers allows one connection to read information left from
    another.
 
-See [demo/README.md](./demo/README.md) for more details.
+See the description of each particular example for more details.
 
 ## Related Material
 

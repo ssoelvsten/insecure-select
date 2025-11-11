@@ -1,74 +1,19 @@
 # Demonstrations
 
-## Control Flow
+## Dependencies
 
-Asymmetric control flow which favours one socket over another can leak secrets.
+These programs have only been designed for Linux. The [*GNU
+Make*](https://www.gnu.org/software/make) scripts use the [*GNU Compiler
+Collection*](https://www.gnu.org/software/gcc/).
 
-### Minimal Examples
+## Examples
 
-The following subfolders includes demonstrations of varying complexities for
-how to leak information through `send`/`recv` and `select`.
+### Minimum Viable Problem (MVP)
 
-- `empty.<variant>`: Leak whether a secret channel has content or not. This
-  provides a 1-bit side channel.
-  - `<stdin>`: Simple offline example using `stdin` and `stdout`.
-  - `<socket>`: The same but with two Unix sockets (with information sent with
-    the `connect.c` program).
-
-- `public`: Leak of a secret value by dropping secret number of messages from a
-  socket with public messages.
-
-- `secret.<sockets>`: Leak of a secret value by reading a (public) constant
-  number of 256 messages from a set of streams.
-  - `<1>`: On a single socket, the secret number of messages is sent first
-    followed by 256 public messages.
-  - `<2>`: The secret number is once more sent as a certain number of messages,
-    but this time on a separate *secret* socket. Yet, since it is given
-    priority when reading, it leaks anew.
+These provide small run-once examples of information leaks.
 
 ### Echo Servers
 
-Based on these minimal examples, we have implemented an `echo` server which
-leaks information about one user's inputs to another.
-
-- `echo.safe`: Is a secure reference implementation that does not leak any
-  information across channels due to a misuse of `select`, the sockets, or
-  anything else.
-
-- The following two examples provide a timing channel by full or partial
-  starvation of one connection due to another.
-
-  - `echo.first-served`: An echo server, that in each round (2s) only replies
-    to the first connection with content. Effectively, a *starvation* of a
-    later connection provides a side-channel. This lifts the `empty.socket`
-    demo into an echo server.
-
-  - `echo.throttle`: An echo server, that in each (2s) round only responds with
-    16 bytes greedily favouring the earliest connected clients. This lifts the
-    `secret.2` example into an echo server.
-
-- `echo.drop`: These two servers lift the `empty.socket` example without making
-  it a timing side channel. The two servers differ in the number of `select`
-  statements each round.
-  - `<1>`: Only the first is served each round (still potentially starving
-    other connections). Yet, each connection not only gets its own message back
-    but also the value of an incrementing counter, i.e. an abstract clock.
-  - `<2>`: Every second use of `select` only drops messages from the first
-    connection rather than sending it back; each connection can see in their
-    response whether they (or a prior connection) had their data dropped.
-
-## Buffer
-
-### Echo Servers
-
-The `echo.buffer/` folder includes several echo servers which buffers users'
-respective messages until it gets an `\n` or `\0`.
-
-- `server.safe`: A safe buffered reference implementation.
-- `server.bad_close`: The buffer is not properly reset when disconnecting
-  with half a message left in the buffer. This is inspired by Apache's
-  security issue
-    [CVE-2010-0434](https://www.cve.org/CVERecord?id=CVE-2010-0434).
-- `server.same_buffer`: The same buffer is used for all connections, meaning
-  one can read buffered partial messages from others. This is inspired by
-  Apache's bug [52701](https://bz.apache.org/bugzilla/show_bug.cgi?id=42701).
+Based on these minimal examples and security issues in the wild, we have
+implemented `echo` servers which leak information about one user's inputs to
+another.
