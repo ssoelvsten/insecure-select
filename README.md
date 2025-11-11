@@ -69,7 +69,7 @@ interesting issues:
   respond) or the unsafe ones would be permitted (they can declassify/endorse
   information regardless of the bugs).
 
-## Usage
+## Relevance
 
 But, how much is `select` and its siblings used? Here is a quick preliminary
 search on GitHub.
