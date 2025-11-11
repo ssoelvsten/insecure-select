@@ -40,13 +40,13 @@ search on GitHub.
 
 ## Related Material
 
-### Issues
+### Real-world Issues
 
 #### Apache
 
 The following [security
 vulnerabilities](https://httpd.apache.org/security_report.html) in the Apache
-web server are vaguely related to this issue:
+web server are related to the `select` multiplexing:
 
 - [CVE-2009-2699](https://www.cve.org/CVERecord?id=CVE-2009-2699): `poll`
   denial of service
