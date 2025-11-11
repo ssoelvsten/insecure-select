@@ -1,4 +1,4 @@
-# Demonstrations
+# Demo
 
 ## Dependencies
 
