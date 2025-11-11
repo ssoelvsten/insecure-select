@@ -7,6 +7,17 @@ Incorrect multiplexing of multiple streams (e.g. by using the
 Linux) can create side-channels. This can leak information about the contents of
 one stream to another.
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Demo](#demo)
+- [Relevance](#relevance)
+- [Related Material](#related-material)
+  - [Real-world Issues](#real-world-issues)
+  - [Papers](#papers)
+
+<!-- markdown-toc end -->
+
 ## Demo
 
 These *C* programs provide examples of varying complexity on how to leak
