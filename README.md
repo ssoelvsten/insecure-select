@@ -20,6 +20,24 @@ These demos can be divided into two types
 
 See the description of each particular example for more details.
 
+
+## Relevance
+
+But, how much is `select` and its siblings used? Here is a quick preliminary
+search on GitHub.
+
+- [Sourcegraph search for
+  `select`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*select%5C%28.*%2C.*%2C.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
+  More than a thousand usages; some of which are not related to the Unix
+  `select`.
+- [Sourcegraph search for
+  `poll`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*poll%5C%28.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
+  Also more than a thousand hits! Some of these, of course, are not related to
+  the Unix `poll`.
+- [Sourcegraph search for `epoll_wait`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*epoll_wait%5C%28.*%2C.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
+  Again, more than a thousand hits!
+
+
 ## Related Material
 
 ### Issues
@@ -68,19 +86,3 @@ interesting issues:
   `echo` example would be invalid (it is tainted by all connections and cannot
   respond) or the unsafe ones would be permitted (they can declassify/endorse
   information regardless of the bugs).
-
-## Relevance
-
-But, how much is `select` and its siblings used? Here is a quick preliminary
-search on GitHub.
-
-- [Sourcegraph search for
-  `select`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*select%5C%28.*%2C.*%2C.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
-  More than a thousand usages; some of which are not related to the Unix
-  `select`.
-- [Sourcegraph search for
-  `poll`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*poll%5C%28.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
-  Also more than a thousand hits! Some of these, of course, are not related to
-  the Unix `poll`.
-- [Sourcegraph search for `epoll_wait`](https://sourcegraph.com/search?q=context:global+language:C+type:file+%3D%5Cs*epoll_wait%5C%28.*%2C.*%2C.*%2C.*%5C%29&patternType=regexp&sm=0):
-  Again, more than a thousand hits!
