@@ -1,5 +1,11 @@
 # Demonstrations
 
+## Control Flow
+
+Asymmetric control flow which favours one socket over another can leak secrets.
+
+### Minimal Examples
+
 The following subfolders includes demonstrations of varying complexities for
 how to leak information through `send`/`recv` and `select`.
 
@@ -19,6 +25,8 @@ how to leak information through `send`/`recv` and `select`.
   - `<2>`: The secret number is once more sent as a certain number of messages,
     but this time on a separate *secret* socket. Yet, since it is given
     priority when reading, it leaks anew.
+
+### Echo Servers
 
 Based on these minimal examples, we have implemented an `echo` server which
 leaks information about one user's inputs to another.
@@ -49,13 +57,18 @@ leaks information about one user's inputs to another.
     connection rather than sending it back; each connection can see in their
     response whether they (or a prior connection) had their data dropped.
 
-- `echo.buffer`: A set of echo servers that buffer the users messages and only
-  responds when reading a `\n` or `\0`.
-  - `server.safe`: A safe buffered reference implementation.
-  - `server.bad_close`: The buffer is not properly reset when disconnecting
-    with half a message left in the buffer. This is inspired by Apache's
-    security issue
+## Buffer
+
+### Echo Servers
+
+The `echo.buffer/` folder includes several echo servers which buffers users'
+respective messages until it gets an `\n` or `\0`.
+
+- `server.safe`: A safe buffered reference implementation.
+- `server.bad_close`: The buffer is not properly reset when disconnecting
+  with half a message left in the buffer. This is inspired by Apache's
+  security issue
     [CVE-2010-0434](https://www.cve.org/CVERecord?id=CVE-2010-0434).
-  - `server.same_buffer`: The same buffer is used for all connections, meaning
-    one can read buffered partial messages from others. This is inspired by
-    Apache's bug [52701](https://bz.apache.org/bugzilla/show_bug.cgi?id=42701).
+- `server.same_buffer`: The same buffer is used for all connections, meaning
+  one can read buffered partial messages from others. This is inspired by
+  Apache's bug [52701](https://bz.apache.org/bugzilla/show_bug.cgi?id=42701).
